@@ -36,7 +36,7 @@ CREATE TABLE Orders (
     користувач_id INT NOT NULL,
     FOREIGN KEY (користувач_id) REFERENCES Users(id),
     FOREIGN KEY (кошик_id) REFERENCES Carts(id)
-);
+)
 
 -- Таблиця Замовлення_Товар (Order_Products) для зв'язку "багато-до-багатьох"
 CREATE TABLE Order_Products (
