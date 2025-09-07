@@ -1,0 +1,58 @@
+-- Таблиця Користувач (Users)
+CREATE TABLE Users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    ім_я VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    телефон VARCHAR(20) NOT NULL UNIQUE,
+    CONSTRAINT email_format CHECK (email REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'),
+    CONSTRAINT phone_format CHECK (телефон REGEXP '^\\+?380[0-9]{9}$')
+);
+
+-- Таблиця Товар (Products)
+CREATE TABLE Products (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    назва VARCHAR(255) NOT NULL,
+    опис TEXT,
+    ціна DECIMAL(10, 2) NOT NULL CHECK (ціна > 0),
+    категорія VARCHAR(50)
+);
+
+-- Таблиця Кошик (Carts)
+CREATE TABLE Carts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    дата_створення DATETIME NOT NULL,
+    користувач_id INT NOT NULL,
+    FOREIGN KEY (користувач_id) REFERENCES Users(id)
+);
+
+-- Таблиця Замовлення (Orders)
+CREATE TABLE Orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    номер_замовлення VARCHAR(255) NOT NULL UNIQUE,
+    статус VARCHAR(50) NOT NULL,
+    дата_замовлення DATETIME NOT NULL,
+    сума DECIMAL(10, 2) NOT NULL,
+    кошик_id INT,
+    користувач_id INT NOT NULL,
+    FOREIGN KEY (користувач_id) REFERENCES Users(id),
+    FOREIGN KEY (кошик_id) REFERENCES Carts(id)
+);
+
+-- Таблиця Замовлення_Товар (Order_Products) для зв'язку "багато-до-багатьох"
+CREATE TABLE Order_Products (
+    замовлення_id INT,
+    товар_id INT,
+    кількість INT NOT NULL,
+    PRIMARY KEY (замовлення_id, товар_id),
+    FOREIGN KEY (замовлення_id) REFERENCES Orders(id),
+    FOREIGN KEY (товар_id) REFERENCES Products(id)
+);
+
+-- Таблиця Квитанція (Receipts)
+CREATE TABLE Receipts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    номер_квитанції VARCHAR(255) NOT NULL UNIQUE,
+    дата_оплати DATETIME NOT NULL,
+    замовлення_id INT NOT NULL,
+    FOREIGN KEY (замовлення_id) REFERENCES Orders(id)
+);
