@@ -3,7 +3,7 @@ name: Data Schema Code Convention Check
 on:
   push:
     paths:
-      - '**.sql'  
+      - '**.sql'
 
 jobs:
   sql-lint:
@@ -13,6 +13,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run SQLFluff linter
-        uses: sqlfluff/sqlfluff-github-action@v2
+        uses: sqlfluff/sqlfluff-github-action@v2.2.0
         with:
           args: "lint --format github ."
